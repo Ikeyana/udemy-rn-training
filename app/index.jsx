@@ -1,4 +1,12 @@
-import { Text, View, Button, StyleSheet, TextInput } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import { useState } from "react";
 
 export default function Index() {
@@ -12,7 +20,7 @@ export default function Index() {
   function addGoalHandler() {
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
-      enteredGoalText,
+      {text: enteredGoalText, id: Math.random().toString()}
     ]);
   }
 
@@ -27,13 +35,20 @@ export default function Index() {
         <Button title=" Add Goal" onPress={addGoalHandler} />
       </View>
       <View style={styles.goalContainer}>
-        {courseGoals.map((goal) => (
-          <View style={styles.goatlItem} key={goal}>
-            <Text style={styles.goalText}  >
-              {goal}
-            </Text>
-          </View>
-        ))}
+        <FlatList
+          data={courseGoals}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles.goatlItem}>
+                <Text style={styles.goalText}>{itemData.item.text}</Text>
+              </View>
+            );
+          }}
+        keyExtractor={(item, index)=>{
+          return item.id
+        }}
+        alwaysBounceVertical={false}
+        />
       </View>
     </View>
   );
@@ -63,17 +78,16 @@ const styles = StyleSheet.create({
   },
   goalContainer: {
     flex: 4,
-    gap: 6,
   },
   goatlItem: {
     padding: 8,
+    margin: 4,
     borderWidth: 1,
     borderColor: "#d9d9d9",
     borderRadius: 8,
-    backgroundColor: "#ffffff"
+    backgroundColor: "purple",
   },
   goalText: {
-    color: "white"
-  }
-  
+    color: "white",
+  },
 });
